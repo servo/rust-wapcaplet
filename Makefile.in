@@ -6,6 +6,7 @@ CXXFLAGS ?=
 AR ?= ar
 RUSTC ?= rustc
 RUSTFLAGS ?=
+CFLAGS += -fPIC
 
 RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 
@@ -15,12 +16,15 @@ all:	libwapcaplet.dummy
 %.o:	%.c
 	$(CC) $< -o $@ -c $(CFLAGS)
 
-libwapcaplet.dummy: wapcaplet.rc $(RUST_SRC)
+libwapcaplet.dummy: wapcaplet.rc $(RUST_SRC) librustwapcaplet.a
 	$(RUSTC) $(RUSTFLAGS) $< -o $@
 	touch $@
 
-wapcaplet-test: wapcaplet.rc $(RUST_SRC)
+wapcaplet-test: wapcaplet.rc $(RUST_SRC) librustwapcaplet.a
 	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
+
+librustwapcaplet.a: rustwapcaplet.o
+	$(AR) rcs librustwapcaplet.a rustwapcaplet.o
 
 .PHONY: check
 check: wapcaplet-test
