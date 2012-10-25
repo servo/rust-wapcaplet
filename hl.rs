@@ -3,6 +3,13 @@ use core::ptr::{null, to_mut_unsafe_ptr};
 use core::cast::transmute;
 use ll::*;
 
+fn require_ok(code: lwc_error) {
+    match code {
+        lwc_error_ok => (),
+        e => fail fmt!("lwc error: %?", e)
+    }
+}
+
 pub struct LwcStringRef {
     priv string: *lwc_string,
 
@@ -14,7 +21,8 @@ pub struct LwcStringRef {
 pub fn from_rust_string(s: &str) -> LwcStringRef {
     let mut interned_string = null();
     do str::as_c_str(s) |cs| {
-        lwc_intern_string(cs, s.len() as size_t, to_mut_unsafe_ptr(&mut interned_string));
+        let code = lwc_intern_string(cs, s.len() as size_t, to_mut_unsafe_ptr(&mut interned_string));
+        require_ok(code);
     }
 
     assert interned_string.is_not_null();
@@ -37,6 +45,10 @@ impl LwcStringRef {
             (*self.string).len as uint
         }
     }
+
+    fn clone() -> LwcStringRef {
+        from_lwc_string(self.string)
+    }
 }
 
 impl LwcStringRef: ToStr {
@@ -58,4 +70,17 @@ fn smoke_test() {
     assert s2.len() == 4;
     let s3 = s2.to_str();
     assert s3 == ~"test";
+}
+
+#[test]
+fn multithreading_test() {
+    for uint::range(0, 100) |i| {
+        for iter::repeat(50) {
+            do task::spawn {
+                let s = vec::from_elem(i + 1, 0).to_str();
+                let s = from_rust_string(s);
+                let _t = s.clone();
+            }
+        }
+    }
 }
