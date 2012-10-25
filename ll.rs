@@ -26,7 +26,7 @@ pub struct lwc_string {
 }
 
 extern {
-    fn lwc_intern_string(s: *char, slen: size_t, ret: *mut *lwc_string) -> lwc_error;
+    fn lwc_intern_string(s: *c_char, slen: size_t, ret: *mut *lwc_string) -> lwc_error;
     fn rust_lwc_string_ref(s: *lwc_string);
     fn rust_lwc_string_unref(s: *lwc_string);
 }
