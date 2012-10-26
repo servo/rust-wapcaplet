@@ -49,6 +49,10 @@ impl LwcStringRef {
     fn clone() -> LwcStringRef {
         from_lwc_string(self.string)
     }
+
+    fn raw_reffed() -> *lwc_string {
+        self.string
+    }
 }
 
 impl LwcStringRef: ToStr {
