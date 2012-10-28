@@ -10,7 +10,7 @@ fn require_ok(code: lwc_error) {
     }
 }
 
-pub struct LwcStringRef {
+pub struct LwcString {
     priv string: *lwc_string,
 
     drop {
@@ -18,7 +18,7 @@ pub struct LwcStringRef {
     }
 }
 
-pub fn from_rust_string(s: &str) -> LwcStringRef {
+pub fn from_rust_string(s: &str) -> LwcString {
     let mut interned_string = null();
     do str::as_c_str(s) |cs| {
         let code = lwc_intern_string(cs, s.len() as size_t, to_mut_unsafe_ptr(&mut interned_string));
@@ -27,26 +27,26 @@ pub fn from_rust_string(s: &str) -> LwcStringRef {
 
     assert interned_string.is_not_null();
 
-    LwcStringRef {
+    LwcString {
         string: interned_string
     }
 }
 
-pub fn from_lwc_string(s: *lwc_string) -> LwcStringRef {
+pub fn from_lwc_string(s: *lwc_string) -> LwcString {
     rust_lwc_string_ref(s);
-    LwcStringRef {
+    LwcString {
         string: s
     }
 }
 
-impl LwcStringRef {
+impl LwcString {
     fn len() -> uint {
         unsafe {
             (*self.string).len as uint
         }
     }
 
-    fn clone() -> LwcStringRef {
+    fn clone() -> LwcString {
         from_lwc_string(self.string)
     }
 
@@ -55,7 +55,7 @@ impl LwcStringRef {
     }
 }
 
-impl LwcStringRef: ToStr {
+impl LwcString: ToStr {
     pure fn to_str() -> ~str {
         unsafe {
             // The string is located immediately after the handle
