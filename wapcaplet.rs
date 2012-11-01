@@ -51,6 +51,7 @@ impl LwcString {
     }
 
     fn raw_reffed() -> *lwc_string {
+        rust_lwc_string_ref(self.string);
         self.string
     }
 }
