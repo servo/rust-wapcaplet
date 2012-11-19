@@ -54,6 +54,15 @@ impl LwcString {
         rust_lwc_string_ref(self.string);
         self.string
     }
+
+    fn to_str_slice(&self) -> &self/str {
+        unsafe {
+            let p: *u8 = transmute(self.string.offset(1));
+            do str::raw::buf_as_slice(p, self.len()) |slice| {
+                transmute(slice)
+            }
+        }
+    }
 }
 
 impl LwcString: ToStr {
