@@ -22,14 +22,14 @@ pub struct LwcString {
     priv string: *lwc_string,
 
     drop {
-        rust_lwc_string_unref(self.string);
+        unsafe { rust_lwc_string_unref(self.string); }
     }
 }
 
 pub fn from_rust_string(s: &str) -> LwcString {
     let mut interned_string = null();
     do str::as_c_str(s) |cs| {
-        let code = lwc_intern_string(cs, s.len() as size_t, to_mut_unsafe_ptr(&mut interned_string));
+        let code = unsafe { lwc_intern_string(cs, s.len() as size_t, to_mut_unsafe_ptr(&mut interned_string)) };
         require_ok(code);
     }
 
@@ -41,7 +41,7 @@ pub fn from_rust_string(s: &str) -> LwcString {
 }
 
 pub fn from_lwc_string(s: *lwc_string) -> LwcString {
-    rust_lwc_string_ref(s);
+    unsafe { rust_lwc_string_ref(s); }
     LwcString {
         string: s
     }
@@ -59,7 +59,7 @@ impl LwcString {
     }
 
     fn raw_reffed() -> *lwc_string {
-        rust_lwc_string_ref(self.string);
+        unsafe { rust_lwc_string_ref(self.string); }
         self.string
     }
 
