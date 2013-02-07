@@ -14,7 +14,7 @@ use ll::*;
 fn require_ok(code: lwc_error) {
     match code {
         lwc_error_ok => (),
-        e => fail fmt!("lwc error: %?", e)
+        e => fail!(fmt!("lwc error: %?", e))
     }
 }
 
@@ -22,28 +22,36 @@ pub struct LwcString {
     priv string: *lwc_string,
 
     drop {
-        unsafe { rust_lwc_string_unref(self.string); }
+        unsafe {
+            rust_lwc_string_unref(self.string);
+        }
     }
 }
 
 pub fn from_rust_string(s: &str) -> LwcString {
-    let mut interned_string = null();
-    do str::as_c_str(s) |cs| {
-        let code = unsafe { lwc_intern_string(cs, s.len() as size_t, to_mut_unsafe_ptr(&mut interned_string)) };
-        require_ok(code);
-    }
+    unsafe {
+        let mut interned_string = null();
+        do str::as_c_str(s) |cs| {
+            let code = lwc_intern_string(cs,
+                                         s.len() as size_t,
+                                         to_mut_unsafe_ptr(&mut interned_string));
+            require_ok(code);
+        }
 
-    assert interned_string.is_not_null();
+        assert interned_string.is_not_null();
 
-    LwcString {
-        string: interned_string
+        LwcString {
+            string: interned_string
+        }
     }
 }
 
 pub fn from_lwc_string(s: *lwc_string) -> LwcString {
-    unsafe { rust_lwc_string_ref(s); }
-    LwcString {
-        string: s
+    unsafe {
+        rust_lwc_string_ref(s);
+        LwcString {
+            string: s
+        }
     }
 }
 
@@ -59,8 +67,10 @@ impl LwcString {
     }
 
     fn raw_reffed() -> *lwc_string {
-        unsafe { rust_lwc_string_ref(self.string); }
-        self.string
+        unsafe {
+            rust_lwc_string_ref(self.string);
+            self.string
+        }
     }
 
     fn to_str_slice(&self) -> &self/str {
@@ -74,7 +84,7 @@ impl LwcString {
 }
 
 impl LwcString: ToStr {
-    pure fn to_str() -> ~str {
+    pure fn to_str(&self) -> ~str {
         unsafe {
             // The string is located immediately after the handle
             let p: *c_char = transmute(self.string.offset(1));
