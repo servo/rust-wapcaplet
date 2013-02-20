@@ -83,7 +83,7 @@ impl LwcString {
     }
 }
 
-impl LwcString: ToStr {
+impl ToStr for LwcString {
     pure fn to_str(&self) -> ~str {
         unsafe {
             // The string is located immediately after the handle
