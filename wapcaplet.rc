@@ -9,6 +9,7 @@ pub mod ll;
 use core::libc::size_t;
 use core::ptr::{null, to_mut_unsafe_ptr};
 use core::cast::transmute;
+use core::libc::*;
 use ll::*;
 
 fn require_ok(code: lwc_error) {
@@ -55,7 +56,7 @@ pub fn from_lwc_string(s: *lwc_string) -> LwcString {
     }
 }
 
-impl LwcString {
+pub impl LwcString {
     fn len() -> uint {
         unsafe {
             (*self.string).len as uint
