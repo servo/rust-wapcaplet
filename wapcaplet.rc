@@ -4,13 +4,13 @@
 
 extern mod std;
 
-pub mod ll;
-
 use core::libc::size_t;
 use core::ptr::{null, to_mut_unsafe_ptr};
 use core::cast::transmute;
 use core::libc::*;
 use ll::*;
+
+pub mod ll;
 
 fn require_ok(code: lwc_error) {
     match code {
@@ -76,7 +76,7 @@ pub impl LwcString {
         }
     }
 
-    fn to_str_slice(&self) -> &self/str {
+    fn to_str_slice(&self) -> &'self str {
         unsafe {
             let p: *u8 = transmute(self.string.offset(1));
             do str::raw::buf_as_slice(p, self.len()) |slice| {
@@ -87,7 +87,7 @@ pub impl LwcString {
 }
 
 impl ToStr for LwcString {
-    pure fn to_str(&self) -> ~str {
+    fn to_str(&self) -> ~str {
         unsafe {
             // The string is located immediately after the handle
             let p: *c_char = transmute(self.string.offset(1));
