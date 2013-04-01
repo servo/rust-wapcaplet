@@ -41,7 +41,7 @@ pub fn from_rust_string(s: &str) -> LwcString {
             require_ok(code);
         }
 
-        fail_unless!(interned_string.is_not_null());
+       assert!(interned_string.is_not_null());
 
         LwcString {
             string: interned_string
