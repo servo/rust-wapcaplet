@@ -1,4 +1,4 @@
-use core::libc::{c_char, c_void, size_t};
+use core::libc::{c_char, size_t};
 use core::libc::types::common::c99::uint32_t;
 
 #[nolink]
