@@ -102,9 +102,9 @@ fn smoke_test() {
     let s2 = from_lwc_string(s1.string);
     debug!("%?", s1.len());
     debug!("%?", s2.len());
-    fail_unless!(s2.len() == 4);
+    assert!(s2.len() == 4);
     let s3 = s2.to_str();
-    fail_unless!(s3 == ~"test");
+    assert!(s3 == ~"test");
 }
 
 #[test]
