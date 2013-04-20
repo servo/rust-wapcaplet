@@ -67,7 +67,7 @@ pub fn from_lwc_string(s: *lwc_string) -> LwcString {
     }
 }
 
-pub impl LwcString {
+pub impl<'self> LwcString {
     fn len(&self) -> uint {
         unsafe {
             (*self.string).len as uint
@@ -85,7 +85,7 @@ pub impl LwcString {
         }
     }
 
-    fn to_str_slice(&self) -> &'self str {
+    fn to_str_slice(&'self self) -> &'self str {
         unsafe {
             let p: *u8 = transmute(self.string.offset(1));
             do str::raw::buf_as_slice(p, self.len()) |slice| {
