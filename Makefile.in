@@ -6,7 +6,7 @@ CXXFLAGS ?=
 AR ?= ar
 RUSTC ?= rustc
 RUSTFLAGS ?=
-CFLAGS += -fPIC
+CFLAGS += -fPIC -I$(VPATH)/../libwapcaplet/include
 
 RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 

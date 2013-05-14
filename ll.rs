@@ -11,7 +11,7 @@ use core::libc::{c_char, size_t};
 use core::libc::types::common::c99::uint32_t;
 
 #[nolink]
-#[link_args="-L../libwapcaplet -lwapcaplet -L. -lrustwapcaplet"]
+#[link_args="-L../../wapcaplet/libwapcaplet -lwapcaplet -L. -lrustwapcaplet"]
 pub extern mod linking { }
 
 pub enum lwc_error_e {
