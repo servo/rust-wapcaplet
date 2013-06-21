@@ -13,10 +13,11 @@
 
 extern mod std;
 
-use core::libc::size_t;
-use core::ptr::{null, to_mut_unsafe_ptr};
-use core::cast::transmute;
-use core::libc::*;
+use std::libc::size_t;
+use std::ptr::{null, to_mut_unsafe_ptr};
+use std::cast::transmute;
+use std::libc::*;
+use std::str;
 use ll::*;
 
 pub mod ll;
@@ -67,30 +68,28 @@ pub fn from_lwc_string(s: *lwc_string) -> LwcString {
     }
 }
 
-pub impl<'self> LwcString {
-    fn len(&self) -> uint {
+impl<'self> LwcString {
+    pub fn len(&self) -> uint {
         unsafe {
             (*self.string).len as uint
         }
     }
 
-    fn clone(&self) -> LwcString {
+    pub fn clone(&self) -> LwcString {
         from_lwc_string(self.string)
     }
 
-    fn raw_reffed(&self) -> *lwc_string {
+    pub fn raw_reffed(&self) -> *lwc_string {
         unsafe {
             rust_lwc_string_ref(self.string);
             self.string
         }
     }
 
-    fn to_str_slice(&'self self) -> &'self str {
+    pub fn to_str_slice(&'self self) -> &'self str {
         unsafe {
             let p: *u8 = transmute(self.string.offset(1));
-            do str::raw::buf_as_slice(p, self.len()) |slice| {
-                transmute(slice)
-            }
+            transmute(str::raw::c_str_to_static_slice(p as *i8))
         }
     }
 }
@@ -118,6 +117,9 @@ fn smoke_test() {
 
 #[test]
 fn multithreading_test() {
+    use std::task;
+    use std::uint;
+    use std::vec;
     for uint::range(0, 100) |i| {
         for 50.times {
             do task::spawn {

@@ -7,12 +7,12 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use core::libc::{c_char, size_t};
-use core::libc::types::common::c99::uint32_t;
+use std::libc::{c_char, size_t};
+use std::libc::types::common::c99::uint32_t;
 
 #[nolink]
 #[link_args="-L../../wapcaplet/libwapcaplet -lwapcaplet -L. -lrustwapcaplet"]
-pub extern mod linking { }
+extern { }
 
 pub enum lwc_error_e {
     lwc_error_ok = 0,
