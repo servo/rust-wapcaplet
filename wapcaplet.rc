@@ -34,7 +34,7 @@ pub struct LwcString {
 }
 
 impl Drop for LwcString {
-    fn finalize(&self) {
+    fn drop(&self) {
         unsafe {
             rust_lwc_string_unref(self.string);
         }
