@@ -11,7 +11,7 @@ use std::libc::{c_char, size_t};
 use std::libc::types::common::c99::uint32_t;
 
 #[nolink]
-#[link_args="-L../../wapcaplet/libwapcaplet -lwapcaplet -L. -lrustwapcaplet"]
+#[link_args="-lwapcaplet -lrustwapcaplet"]
 extern { }
 
 pub enum lwc_error_e {

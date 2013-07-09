@@ -5,7 +5,7 @@ CXX ?= g++
 CXXFLAGS ?=
 AR ?= ar
 RUSTC ?= rustc
-RUSTFLAGS ?=
+RUSTFLAGS += -L ../libwapcaplet -L .
 CFLAGS += -fPIC -I$(VPATH)/../libwapcaplet/include
 
 RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
