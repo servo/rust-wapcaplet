@@ -44,7 +44,7 @@ impl Drop for LwcString {
 pub fn from_rust_string(s: &str) -> LwcString {
     unsafe {
         let mut interned_string = null();
-        do s.as_c_str |cs| {
+        do s.to_c_str().with_ref |cs| {
             let code = lwc_intern_string(cs,
                                          s.len() as size_t,
                                          to_mut_unsafe_ptr(&mut interned_string));
@@ -98,8 +98,8 @@ impl ToStr for LwcString {
     fn to_str(&self) -> ~str {
         unsafe {
             // The string is located immediately after the handle
-            let p: *c_char = transmute(self.string.offset(1));
-            str::raw::from_c_str_len(p, self.len())
+            let p: *u8 = transmute(self.string.offset(1));
+            str::raw::from_buf_len(p, self.len())
         }
     }
 }
