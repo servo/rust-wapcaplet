@@ -21,7 +21,7 @@ libwapcaplet.dummy: wapcaplet.rc $(RUST_SRC) librustwapcaplet.a
 	touch $@
 
 wapcaplet-test: wapcaplet.rc $(RUST_SRC) librustwapcaplet.a
-	$(RUSTC) $(RUSTFLAGS) $< --out-dir . --test
+	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
 
 librustwapcaplet.a: rustwapcaplet.o
 	$(AR) rcs librustwapcaplet.a rustwapcaplet.o
