@@ -17,11 +17,11 @@ all:	libwapcaplet.dummy
 	$(CC) $< -o $@ -c $(CFLAGS)
 
 libwapcaplet.dummy: wapcaplet.rc $(RUST_SRC) librustwapcaplet.a
-	$(RUSTC) $(RUSTFLAGS) $< -o $@
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
 	touch $@
 
 wapcaplet-test: wapcaplet.rc $(RUST_SRC) librustwapcaplet.a
-	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir . --test
 
 librustwapcaplet.a: rustwapcaplet.o
 	$(AR) rcs librustwapcaplet.a rustwapcaplet.o
