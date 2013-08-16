@@ -16,7 +16,6 @@ extern mod std;
 use std::libc::size_t;
 use std::ptr::{null, to_mut_unsafe_ptr};
 use std::cast::transmute;
-use std::libc::*;
 use std::str;
 use ll::*;
 
