@@ -33,6 +33,7 @@ pub struct LwcString {
 }
 
 impl Drop for LwcString {
+	 #[fixed_stack_segment]
     fn drop(&self) {
         unsafe {
             rust_lwc_string_unref(self.string);
@@ -40,6 +41,7 @@ impl Drop for LwcString {
     }
 }
 
+#[fixed_stack_segment]
 pub fn from_rust_string(s: &str) -> LwcString {
     unsafe {
         let mut interned_string = null();
@@ -58,6 +60,7 @@ pub fn from_rust_string(s: &str) -> LwcString {
     }
 }
 
+#[fixed_stack_segment]
 pub fn from_lwc_string(s: *lwc_string) -> LwcString {
     unsafe {
         rust_lwc_string_ref(s);
@@ -78,6 +81,7 @@ impl<'self> LwcString {
         from_lwc_string(self.string)
     }
 
+	#[fixed_stack_segment]
     pub fn raw_reffed(&self) -> *lwc_string {
         unsafe {
             rust_lwc_string_ref(self.string);
