@@ -34,7 +34,7 @@ pub struct LwcString {
 
 impl Drop for LwcString {
 	 #[fixed_stack_segment]
-    fn drop(&self) {
+    fn drop(&mut self) {
         unsafe {
             rust_lwc_string_unref(self.string);
         }
